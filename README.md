@@ -44,9 +44,6 @@
 
 ## 🍀 개발 문서
 <details>
-  <summary>ERD</summary>
-</details>
-<details>
   <summary>아키텍처</summary>
 
 ![백엔드 서버 아키텍처](https://github.com/user-attachments/assets/f96d2c88-223c-47b4-a673-ac613be39063)
