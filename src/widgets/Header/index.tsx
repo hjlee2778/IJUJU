@@ -9,6 +9,10 @@ const Header = () => {
   const { data: notifications } = useQuery({
     queryKey: NOTIFICATION_KEYS.list(0),
     queryFn: () => notificationApi.getNotifications(),
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    staleTime: Infinity, // 캐시를 무기한으로 유지
   });
 
   const hasUnreadNotifications =
