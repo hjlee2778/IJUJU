@@ -23,6 +23,9 @@ interface SSENotification {
 export const useNotificationSSE = () => {
   const queryClient = useQueryClient();
   const { isAuthenticated, accessToken } = useAuthStore();
+  
+  // 데모 모드에서는 SSE 비활성화
+  const isDemoMode = import.meta.env.VITE_DEMO_MODE === 'true';
 
   const handleSSEEvent = useCallback(
     (eventData: SSENotification) => {
@@ -52,6 +55,12 @@ export const useNotificationSSE = () => {
   );
 
   const connectSSE = useCallback(() => {
+    // 데모 모드에서는 SSE 연결하지 않음
+    if (isDemoMode) {
+      console.log('📌 데모 모드: SSE 연결이 비활성화되었습니다');
+      return;
+    }
+    
     if (!isAuthenticated || !accessToken) return;
 
     const eventSource = new EventSourcePolyfill(
@@ -105,7 +114,7 @@ export const useNotificationSSE = () => {
     eventSource.onerror = () => {
       console.error('SSE 연결 에러');
       eventSource.close();
-      if (isAuthenticated && accessToken) {
+      if (isAuthenticated && accessToken && !isDemoMode) {
         setTimeout(connectSSE, 3000);
       }
     };
@@ -118,7 +127,7 @@ export const useNotificationSSE = () => {
       eventSource.removeEventListener('retry', handleRetry);
       eventSource.close();
     };
-  }, [isAuthenticated, accessToken, handleSSEEvent]);
+  }, [isAuthenticated, accessToken, handleSSEEvent, isDemoMode]);
 
   useEffect(() => {
     const cleanup = connectSSE();
